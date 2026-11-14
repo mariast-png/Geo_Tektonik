@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Geo-Quest Klasse 7</title>
+<style>
+:root{--navy:#12304a;--sea:#1f7a8c;--sand:#fbf3e4;--lava:#e4572e;--sun:#f6b73c;--leaf:#2e9e5b;--bad:#d1384a;--ink:#1c2733;--card:#fffdf8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--sand);color:var(--ink);font:16px/1.5 "Trebuchet MS","Segoe UI",system-ui,sans-serif}
+header{background:linear-gradient(135deg,var(--navy),var(--sea));color:#fff;padding:14px 16px 12px;position:sticky;top:0;z-index:5;box-shadow:0 3px 10px #0003}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;max-width:900px;margin:auto}
+h1{margin:0;font-size:1.35rem;letter-spacing:.3px}
+.stats{display:flex;gap:8px;font-weight:700;font-size:.95rem}
+.stats span{background:#ffffff22;border-radius:20px;padding:3px 11px}
+.lvl{max-width:900px;margin:8px auto 0;font-size:.85rem}
+.bar{height:10px;background:#ffffff33;border-radius:6px;overflow:hidden;margin-top:3px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--sun),var(--lava));width:0;transition:width .6s}
+nav{max-width:900px;margin:14px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 12px}
+nav button{border:3px solid var(--navy);background:#fff;border-radius:14px;padding:9px 6px;font:inherit;font-weight:700;color:var(--navy);cursor:pointer;text-align:center}
+nav button small{display:block;font-weight:400;font-size:.76rem}
+nav button.on{background:var(--navy);color:#fff}
+main{max-width:900px;margin:auto;padding:14px 12px 110px}
+.card{background:var(--card);border:2px solid #e6d9bd;border-radius:18px;padding:16px;margin-bottom:16px;box-shadow:0 4px 0 #e6d9bd}
+.card h3{margin:0 0 4px;font-size:1.15rem;color:var(--navy)}
+.intro{margin:0 0 12px;color:#4a5866;font-size:.95rem}
+.done{float:right;font-size:.85rem;background:#dff3e6;color:#18683a;border-radius:12px;padding:2px 10px;font-weight:700}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.fc{min-height:96px;border-radius:14px;background:var(--sea);color:#fff;padding:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:700;user-select:none}
+.fc .b{display:none;font-weight:400;font-size:.86rem}
+.fc.on{background:var(--leaf)}.fc.on .f{display:none}.fc.on .b{display:block}
+.q{margin:0 0 12px;padding:8px;border-radius:12px;border:2px solid transparent}
+.q.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.q.row b{flex:1 1 220px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.opts label span{display:block;padding:7px 13px;border:2px solid #cdbf9f;border-radius:20px;background:#fff;cursor:pointer}
+.opts input{position:absolute;opacity:0}
+.opts input:checked+span{background:var(--navy);color:#fff;border-color:var(--navy)}
+.opts input:focus-visible+span,button:focus-visible,select:focus-visible,.fc:focus-visible{outline:3px solid var(--sun)}
+select{font:inherit;padding:6px;border-radius:10px;border:2px solid #cdbf9f;background:#fff;max-width:100%}
+.gap{line-height:2.4}
+.ok{border-color:var(--leaf)!important;background:#e4f6ea}.bad{border-color:var(--bad)!important;background:#fde7ea}
+select.ok{background:#e4f6ea}select.bad{background:#fde7ea}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid var(--navy);background:#fff;border-radius:12px;padding:8px 12px;font:inherit;cursor:pointer;position:relative}
+.chip.used{background:var(--sun);border-color:var(--sun);font-weight:700}
+.chip em{font-style:normal;background:var(--navy);color:#fff;border-radius:50%;width:22px;height:22px;display:inline-block;text-align:center;margin-right:6px;font-size:.8rem}
+.ml{display:block;padding:7px 10px;margin:4px 0;border-radius:10px;border:2px solid transparent}
+.act{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center}
+.btn{border:0;border-radius:24px;padding:10px 20px;font:inherit;font-weight:700;color:#fff;background:var(--lava);cursor:pointer;box-shadow:0 3px 0 #a53b1e}
+.btn.g{background:var(--sea);box-shadow:0 3px 0 #145766}
+.fb{font-weight:700}.ex{margin-top:6px;padding:8px 10px;background:#fff3cf;border-radius:10px;font-size:.9rem;display:none}
+.badges{display:flex;gap:6px;flex-wrap:wrap;max-width:900px;margin:8px auto 0}
+.bd{font-size:.78rem;background:#ffffff22;border-radius:12px;padding:2px 9px;opacity:.45}.bd.on{opacity:1;background:var(--sun);color:var(--navy);font-weight:700}
+#gradeBtn{position:fixed;right:14px;bottom:14px;z-index:6;font-size:1rem}
+#modal{display:none;position:fixed;inset:0;background:#000a;z-index:9;align-items:center;justify-content:center;padding:16px}
+#modal .box{background:#fff;border-radius:22px;padding:24px;max-width:420px;width:100%;text-align:center}
+.note{font-size:4.5rem;font-weight:800;color:var(--lava);line-height:1}
+#toast{position:fixed;left:50%;top:80px;transform:translateX(-50%);background:var(--navy);color:#fff;border-radius:20px;padding:10px 20px;z-index:10;display:none;font-weight:700;border:3px solid var(--sun)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<header><div class="top"><h1>🌍 Geo-Quest · Klasse 7</h1>
+<div class="stats"><span id="xp">⚡ 0 XP</span><span id="st">⭐ 0</span></div></div>
+<div class="lvl"><span id="lv"></span><div class="bar"><i id="lb"></i></div></div>
+<div class="badges" id="bd"></div></header>
+<nav id="nav"></nav><main id="main"></main>
+<button class="btn" id="gradeBtn">📝 Meine Note</button>
+<div id="modal"><div class="box" id="mbox"></div></div><div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s);
+const SH=a=>a.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+const SEAS=['Frühling','Sommer','Herbst','Winter'];
+const DEF=['Sonne im Zenit über dem nördlichen Wendekreis (21. Juni)','Sonne im Zenit über dem südlichen Wendekreis (21. Dezember)','Zwischen den Wendekreisen: keine temperaturbedingten Jahreszeiten','Zwischen Wende- und Polarkreisen: vier Jahreszeiten','Polartag und Polarnacht, niedriger Sonnenstand','Tiefe Rinne dort, wo ozeanische Kruste abtaucht','Platten driften auseinander, neue Kruste entsteht'];
+const GW=['ozeanische','kontinentale','Subduktionszone','Tiefseerinne','Gebirge','Magma','Vulkane','Erdbeben'];
+const PT=['Platten driften auseinander','Platten bewegen sich aufeinander zu','Platten gleiten aneinander vorbei'];
+const E=[
+{id:'a1',p:0,t:'Lernkarten: Tippe alle Karten an',in:'Vorderseite = Begriff, Rückseite = Erklärung. Dreh jede Karte um!',ty:'cards',c:[
+['Erdachse','23,5° geneigt gegenüber der Senkrechten auf der Erdbahnebene'],['Revolution','Umlauf der Erde um die Sonne: 365 Tage und 6 Stunden'],['Rotation','Drehung um die Erdachse: alle 24 Stunden'],['Zenit','Punkt senkrecht über dem Beobachter – nur zwischen den Wendekreisen'],['Wendekreise','23,5° nördlicher und südlicher Breite'],['Polarkreise','66,5° N und S: dort bis zu 24 Std. Polartag/Polarnacht'],['Tagundnachtgleiche','21.3. und 23.9.: überall 12 Std. Tag, 12 Std. Nacht'],['Lithosphäre','Gesteinshülle: Erdkruste + fester oberer Mantel'],['Asthenosphäre','Fließzone: plastischer, verformbarer oberer Mantel'],['Subduktion','Schwere ozeanische Platte taucht unter leichtere kontinentale'],['Seafloor Spreading','Neue ozeanische Kruste am Mittelozeanischen Rücken'],['Pangäa','Urkontinent aus Wegeners Theorie der Kontinentalverschiebung']]},
+{id:'a2',p:0,t:'Begriffe zuordnen',in:'Wähle zu jedem Begriff die passende Beschreibung.',ty:'sel',o:DEF,q:[{q:'Sommersonnenwende',a:0},{q:'Wintersonnenwende',a:1},{q:'Tropen',a:2},{q:'Gemäßigte Zone',a:3},{q:'Polarzone',a:4},{q:'Tiefseerinne',a:5},{q:'Mittelozeanischer Rücken',a:6}],x:'Tropen: Sonnenstand ganzjährig hoch. Gemäßigte Zone: wechselnde Sonnenstände = Jahreszeiten.'},
+{id:'a3',p:0,t:'Schalenbau der Erde',in:'Tippe die Schichten von außen nach innen an.',ty:'order',o:['Erdkruste (bis ca. 50 km)','Oberer Erdmantel (bis ca. 400 km)','Unterer Erdmantel (bis ca. 2900 km)','Äußerer Erdkern (bis ca. 5100 km)','Innerer Erdkern (bis ca. 6370 km)'],x:'Äußerer Kern: vermutlich flüssig. Innerer Kern: vermutlich fest.'},
+{id:'b1',p:1,t:'Quiz: Beleuchtungszonen',in:'Wähle die richtige Antwort.',ty:'mc',q:[
+{q:'Wie stark ist die Erdachse geneigt?',o:['0°','23,5°','66,5°','90°'],a:1},
+{q:'Wann steht die Sonne über dem nördlichen Wendekreis im Zenit?',o:['21. März','21. Juni','23. September','21. Dezember'],a:1},
+{q:'Wie lang dauert der Polartag am Polarkreis?',o:['12 Stunden','6 Monate','24 Stunden','1 Woche'],a:2},
+{q:'Warum erwärmt senkrechter Einfall stärker?',o:['Die Sonne ist näher','Die Energie verteilt sich auf eine kleinere Fläche','Die Luft ist dünner','Es gibt keine Wolken'],a:1},
+{q:'Wann sind Tag und Nacht überall gleich lang?',o:['21. Juni und 21. Dezember','21. März und 23. September','Nur am Äquator','Nie'],a:1},
+{q:'Der meteorologische Sommer dauert …',o:['21.6.–23.9.','1.6.–31.8.','1.7.–30.9.','1.5.–31.7.'],a:1}],x:'Merke: Der astronomische Sommer beginnt am 21. Juni, der meteorologische am 1. Juni.'},
+{id:'b2',p:1,t:'Wahr oder falsch?',in:'Entscheide schnell – jeder Treffer zählt!',ty:'mc',q:[
+{q:'Bei uns steht die Sonne im Sommer im Zenit.',a:1},{q:'In den Tropen gibt es keine temperaturbedingten Jahreszeiten.',a:0},{q:'Ist bei uns Winter, ist auf der Südhalbkugel Sommer.',a:0},{q:'Die Erdachse ändert beim Umlauf ständig ihre Neigung.',a:1},{q:'Nur etwa die Hälfte der Sonnenstrahlung erreicht die Erdoberfläche.',a:0},{q:'Die Luft wird direkt von den Sonnenstrahlen erwärmt.',a:1}].map(x=>({...x,o:['wahr','falsch']})),x:'Zenit gibt es nur zwischen den Wendekreisen. Die Luft wird erst von der erwärmten Erdoberfläche aufgeheizt.'},
+{id:'b3',p:1,t:'Lückentext: Subduktion',in:'Vervollständige den Text aus dem Arbeitsheft.',ty:'gap',o:GW,a:[0,1,2,3,4,5,6,7],tx:'Bewegen sich zwei Platten aufeinander zu, schiebt sich die schwere {0} Kruste unter die leichte {1} Kruste. Diesen Bereich nennt man {2}. Durch das Abtauchen entsteht eine {3}. Der Rand der kontinentalen Kruste wird gestaucht, sodass {4} entstehen. Über der abtauchenden Kruste bildet sich {5}, das an Bruchzonen an die Oberfläche gelangt und {6} bildet. Durch Druck- und Zugkräfte verhaken sich die Platten, es entstehen {7}.',x:'Beispiel: Pazifische Platte taucht bei Japan unter die Eurasische Platte.'},
+{id:'b4',p:1,t:'Jahreszeiten-Tabelle',in:'Welche Jahreszeit beginnt an diesem Datum?',ty:'sel',o:SEAS,q:[{q:'Nordhalbkugel · 21.06.',a:1},{q:'Südhalbkugel · 21.06.',a:3},{q:'Nordhalbkugel · 21.12.',a:3},{q:'Südhalbkugel · 21.12.',a:1},{q:'Südhalbkugel · 21.03.',a:2},{q:'Südhalbkugel · 23.09.',a:0}],x:'Die Südhalbkugel hat immer die entgegengesetzte Jahreszeit.'},
+{id:'c1',p:2,t:'Plattengrenzen-Detektiv 🔎',in:'Welcher Typ von Plattengrenze steckt dahinter?',ty:'mc',q:[
+{q:'Island wächst jedes Jahr um etwa 2 cm.',a:0},{q:'Die Nazca-Platte taucht vor Südamerika ab – es entstehen Anden und Tiefseerinne.',a:1},{q:'An der San-Andreas-Verwerfung in Kalifornien verhaken sich Platten.',a:2},{q:'Vor Japan führt das Abtauchen zu Vulkanen und dem Beben von 2011.',a:1},{q:'Im Mittelatlantischen Rücken steigt Magma auf und bildet neue Kruste.',a:0}].map(x=>({...x,o:PT})),x:'Auseinander: Rücken, Grabenbruch · Aufeinander zu: Subduktion, Faltengebirge · Vorbei: San-Andreas-Störung.'},
+{id:'c2',p:2,t:'Reise-Challenge: 21. Juni 🧳',in:'Du bist an verschiedenen Orten unterwegs. Was erlebst du?',ty:'mc',q:[
+{q:'Wo steht die Sonne am 21. Juni im Zenit?',o:['Am Äquator','Am nördlichen Wendekreis (z. B. Guangzhou)','In Köln','Am südlichen Wendekreis'],a:1},
+{q:'Köln am 21. Juni: Wie lang ist der Tag?',o:['ca. 8 Stunden','genau 12 Stunden','über 15,5 Stunden','24 Stunden'],a:2},
+{q:'Nairobi liegt am Äquator. Wie lang sind die Tage?',o:['Ganzjährig fast 12 Stunden','Im Juni 24 Stunden','Im Juni 8 Stunden','Im Winter 0 Stunden'],a:0},
+{q:'Murmansk liegt nördlich des Polarkreises. Was gibt es am 21. Juni?',o:['Polarnacht','Polartag – die Sonne geht nicht unter','Zenitstand','Tagundnachtgleiche'],a:1},
+{q:'Sydney am 21. Juni?',o:['Sommer, lange Tage','Winter, kurze Tage','Zenitstand','Polartag'],a:1},
+{q:'Warum sind die Tropen ca. 26 °C warm, die Polarzone eisig?',o:['Steiler Einstrahlungswinkel in den Tropen','Die Tropen sind näher an der Sonne','Dort gibt es mehr Wolken','Polargebiete haben keine Atmosphäre'],a:0}],x:'Je kleiner der Einstrahlungswinkel, desto weniger Energie pro Fläche.'},
+{id:'c3',p:2,t:'Experten-Boss 👑: Warum ist es im Juni bei uns warm?',in:'Hake alle richtigen Aussagen an – Achtung, Fallen!',ty:'multi',q:[
+{q:'Die Erdachse ist geneigt; die Nordhalbkugel ist der Sonne zugewandt.',a:true},{q:'Der Einstrahlungswinkel ist größer, die Energie pro Fläche steigt.',a:true},{q:'Die Tage sind länger, die Sonne wirkt länger ein.',a:true},{q:'Die Erde ist im Sommer näher an der Sonne.',a:false},{q:'Die erwärmte Erdoberfläche gibt Wärme an die Luft ab.',a:true},{q:'Am Äquator scheint im Juni keine Sonne.',a:false},{q:'Auf der Südhalbkugel ist gleichzeitig auch Sommer.',a:false}],x:'Ursache der Jahreszeiten ist die Neigung der Erdachse – nicht der Abstand zur Sonne.'}];
+const PN=[['🔭 Kennenlernen','Entdecken'],['⚡ Üben','Training'],['🚀 Anwenden','Boss-Level']];
+const LV=[[0,'Entdecker 🧭'],[70,'Forscher 🔬'],[170,'Geo-Profi 🌍'],[300,'Vulkanmeister 🌋']];
+let S={res:{},part:0,ord:{},fl:{},lvl:0};
+const mx=e=>e.c?e.c.length:e.q?e.q.length:e.a?e.a.length:e.o.length;
+const stars=r=>!r?0:r.b/r.m>=.9?3:r.b/r.m>=.6?2:r.b/r.m>=.3?1:0;
+function html(e){
+ let h=`<div class="card" id="c_${e.id}">${S.res[e.id]?'<span class="done">✅ '+'⭐'.repeat(stars(S.res[e.id]))+'</span>':''}<h3>${e.t}</h3><p class="intro">${e.in}</p>`;
+ if(e.ty=='cards')h+='<div class="cards">'+e.c.map((c,i)=>`<div class="fc" tabindex="0" data-f="${i}"><span class="f">${c[0]}</span><span class="b">${c[1]}</span></div>`).join('')+'</div>';
+ if(e.ty=='mc')h+=e.q.map((q,i)=>`<div class="q" data-k="${i}"><b>${q.q}</b><div class="opts">${q.o.map((o,j)=>`<label><input type="radio" name="${e.id}_${i}" value="${j}"><span>${o}</span></label>`).join('')}</div></div>`).join('');
+ if(e.ty=='sel')h+=e.q.map((q,i)=>`<div class="q row" data-k="${i}"><b>${q.q}</b><select name="${e.id}_${i}"><option value="">– wählen –</option>${e.o.map((o,j)=>`<option value="${j}">${o}</option>`).join('')}</select></div>`).join('');
+ if(e.ty=='gap'){const op=`<option value="">…</option>`+SH(e.o.map((o,j)=>[o,j])).map(x=>`<option value="${x[1]}">${x[0]}</option>`).join('');h+='<p class="gap">'+e.tx.replace(/\{(\d)\}/g,(m,i)=>`<select data-k="${i}" name="${e.id}_${i}">${op}</select>`)+'</p>';}
+ if(e.ty=='multi')h+=e.q.map((q,i)=>`<label class="ml" data-k="${i}"><input type="checkbox" name="${e.id}_${i}"> ${q.q}</label>`).join('');
+ if(e.ty=='order'){S.ord[e.id]=[];h+='<div class="chips">'+SH(e.o.map((o,j)=>[o,j])).map(x=>`<button class="chip" data-o="${x[1]}">${x[0]}</button>`).join('')+'</div>';}
+ return h+`<div class="act">${e.ty=='cards'?'':`<button class="btn" data-chk="${e.id}">Prüfen</button>`}<button class="btn g" data-re="${e.id}">Neu starten</button><span class="fb"></span></div><div class="ex">💡 ${e.x||''}</div></div>`;
+}
+function check(e){
+ const c=$('#c_'+e.id);let got=0,m=mx(e);
+ if(e.ty=='cards')got=(S.fl[e.id]||new Set()).size;
+ else if(e.ty=='order'){const st=S.ord[e.id];c.querySelectorAll('.chip').forEach(b=>{const pos=st.indexOf(+b.dataset.o);const ok=pos==+b.dataset.o;b.classList.add(ok?'ok':'bad');if(ok)got++;});}
+ else{const items=e.q||e.a.map(a=>({a}));items.forEach((q,i)=>{
+  let ok,t=c.querySelector(`[data-k="${i}"]`);
+  if(e.ty=='multi')ok=t.querySelector('input').checked===q.a;
+  else{const el=c.querySelector(`select[name="${e.id}_${i}"]`)||c.querySelector(`input[name="${e.id}_${i}"]:checked`);ok=!!el&&el.value!==''&&+el.value===q.a;}
+  t.classList.remove('ok','bad');t.classList.add(ok?'ok':'bad');if(ok)got++;});}
+ const old=S.res[e.id];S.res[e.id]={b:Math.max(got,old?old.b:0),m};
+ c.querySelector('.fb').textContent=`${got} von ${m} richtig `+(got==m?'🎉 Perfekt!':got/m>=.6?'💪 Stark, noch mal für Sterne!':'🔁 Versuch es nochmal!');
+ c.querySelector('.ex').style.display='block';
+ if(!c.querySelector('.done'))c.insertAdjacentHTML('afterbegin','<span class="done"></span>');
+ c.querySelector('.done').textContent='✅ '+'⭐'.repeat(stars(S.res[e.id]));
+ update();
+}
+function xp(){let x=0;E.forEach(e=>{const r=S.res[e.id];if(r)x+=r.b*10+(r.b==r.m?20:0)});return x}
+function update(){
+ const x=xp(),st=E.reduce((s,e)=>s+stars(S.res[e.id]),0);let l=0;LV.forEach((v,i)=>{if(x>=v[0])l=i});
+ const nx=LV[l+1];$('#xp').textContent='⚡ '+x+' XP';$('#st').textContent='⭐ '+st+'/30';
+ $('#lv').textContent='Level '+(l+1)+': '+LV[l][1]+(nx?' · noch '+(nx[0]-x)+' XP bis '+nx[1]:' · Höchstes Level!');
+ $('#lb').style.width=(nx?(x-LV[l][0])/(nx[0]-LV[l][0])*100:100)+'%';
+ if(l>S.lvl){toast('Level-Up! '+LV[l][1]);}S.lvl=l;
+ const pd=i=>E.filter(e=>e.p==i).every(e=>S.res[e.id]);const perf=E.filter(e=>{const r=S.res[e.id];return r&&r.b==r.m}).length;
+ const B=[['🔭 Teil 1',pd(0)],['⚡ Teil 2',pd(1)],['🚀 Teil 3',pd(2)],['💎 3× perfekt',perf>=3],['🌟 15 Sterne',st>=15],['👑 Boss besiegt',(S.res.c3||{}).b==7]];
+ $('#bd').innerHTML=B.map(b=>`<span class="bd ${b[1]?'on':''}">${b[0]}</span>`).join('');
+ document.querySelectorAll('#nav button').forEach((b,i)=>{const t=E.filter(e=>e.p==i);b.querySelector('small').textContent=PN[i][1]+' · '+t.filter(e=>S.res[e.id]).length+'/'+t.length});
+}
+function toast(m){const t=$('#toast');t.textContent='🎉 '+m;t.style.display='block';setTimeout(()=>t.style.display='none',2600)}
+function show(p){S.part=p;document.querySelectorAll('#nav button').forEach((b,i)=>b.classList.toggle('on',i==p));$('#main').innerHTML=E.filter(e=>e.p==p).map(html).join('');window.scrollTo(0,0)}
+$('#nav').innerHTML=PN.map((n,i)=>`<button data-p="${i}">${n[0]}<small></small></button>`).join('');
+document.addEventListener('click',ev=>{
+ const t=ev.target,g=s=>t.closest(s);let r;
+ if(r=g('[data-p]'))show(+r.dataset.p);
+ else if(r=g('[data-f]')){const e=E.find(e=>e.id=='a1');r.classList.toggle('on');const f=S.fl.a1=S.fl.a1||new Set();if(r.classList.contains('on'))f.add(r.dataset.f);
+  if(f.size==e.c.length&&!(S.res.a1&&S.res.a1.b==e.c.length)){check(e);$('#c_a1 .fb').textContent='Alle Karten gelernt! 🎉'}}
+ else if(r=g('[data-chk]'))check(E.find(e=>e.id==r.dataset.chk));
+ else if(r=g('[data-re]')){const e=E.find(e=>e.id==r.dataset.re);if(e.id=='a1')S.fl.a1=new Set();$('#c_'+e.id).outerHTML=html(e)}
+ else if(r=g('.chip')){const id=r.closest('.card').id.slice(2),st=S.ord[id];if(!r.classList.contains('used')&&!r.classList.contains('ok')&&!r.classList.contains('bad')){st.push(+r.dataset.o);r.classList.add('used');r.insertAdjacentHTML('afterbegin',`<em>${st.length}</em>`)}}
+ else if(g('#gradeBtn'))grade();
+ else if(t.id=='modal'||g('[data-x]'))$('#modal').style.display='none';
+});
+function grade(){
+ const d=E.filter(e=>S.res[e.id]);const got=d.reduce((s,e)=>s+S.res[e.id].b,0),m=d.reduce((s,e)=>s+S.res[e.id].m,0);
+ const pc=m?Math.round(got/m*100):0,n=pc>=92?1:pc>=81?2:pc>=67?3:pc>=50?4:pc>=30?5:6;
+ const msg=['Sensationell – du bist testbereit! 🏆','Sehr gut! Nur noch Feinschliff.','Gut! Wiederhole die rot markierten Aufgaben.','Solide Basis – übe Teil 2 noch einmal.','Dranbleiben! Starte mit den Lernkarten.','Keine Sorge – fang mit Teil 1 an, Schritt für Schritt.'][n-1];
+ $('#mbox').innerHTML=d.length?`<h2>Dein Stand</h2><div class="note">${n}</div><p><b>${pc} %</b> (${got} von ${m} Punkten)<br>${d.length} von ${E.length} Aufgaben bearbeitet</p><p>${msg}</p>${d.length<E.length?'<p><small>Die Note gilt für die bisher bearbeiteten Aufgaben. Sie ist eine Orientierung, keine echte Zensur.</small></p>':''}<button class="btn" data-x>Weiter üben</button>`:'<h2>Noch keine Note</h2><p>Löse erst eine Aufgabe, dann zeige ich dir deinen Stand.</p><button class="btn" data-x>Los geht’s</button>';
+ $('#modal').style.display='flex';
+}
+show(0);update();
+</script></body></html>
